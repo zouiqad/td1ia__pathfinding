@@ -69,7 +69,7 @@ public class Tile : MonoBehaviour
             switch (_tileType)
             {
                 default:
-                    return 0.0f;
+                    return 1.0f;
             }
         }
 
