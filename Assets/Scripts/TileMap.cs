@@ -4,29 +4,30 @@ using UnityEngine;
 
 public class TileMap : MonoBehaviour
 {
-    public GameObject _tilePrefab;
-    public int sizeX = 20;
-    public int sizeY = 20;
+    private GameManager gameManager;
+
+
+    private TileMap[,] worldGrid;
+    public int sizeX = 10;
+    public int sizeY = 10;
 
     public Tile[,] grid;
-    
 
-    private Dictionary<Tile, Tile[]> neighborDictionary;
-    public Tile[] Neighbors(Tile tile)
+    public Dictionary<Tile, List<Tile>> neighborDictionary;
+
+    public List<Tile> Neighbors(Tile tile)
     {
         return neighborDictionary[tile];
     }
 
-    void Awake()
+    public void GenerateChunk(GameObject _tilePrefab)
     {
+        gameManager = GameObject.Find("GameManager").GetComponent<GameManager>();
+        worldGrid = gameManager.worldGrid;
+
         grid = new Tile[sizeX, sizeY];
-        neighborDictionary = new Dictionary<Tile, Tile[]>();
-        GenerateMap(sizeX, sizeY);
-    }
+        neighborDictionary = new Dictionary<Tile, List<Tile>>();
 
-
-    void GenerateMap(int sizeX, int sizeY)
-    {
         // Generer la map (gameobjects)
         for (int y = 0; y < sizeY; y++)
         {
@@ -34,7 +35,7 @@ public class TileMap : MonoBehaviour
             {
                 grid[x, y] = Instantiate(_tilePrefab, new Vector3(x, 0, y), Quaternion.identity).GetComponent<Tile>();
                 grid[x, y].gameObject.transform.parent = transform;
-                grid[x, y].Init(x, y, Random.Range(0, 2));
+                grid[x, y].Init(x, y, 0);
             }
         }
 
@@ -44,6 +45,7 @@ public class TileMap : MonoBehaviour
             for (int x = 0; x < sizeX; x++)
             {
                 List<Tile> neighbors = new List<Tile>();
+                
                 if (y < sizeY - 1)
                     neighbors.Add(grid[x, y + 1]);
                 if (x < sizeX - 1)
@@ -53,17 +55,33 @@ public class TileMap : MonoBehaviour
                 if (x > 0)
                     neighbors.Add(grid[x - 1, y]);
 
-                neighborDictionary.Add(grid[x, y], neighbors.ToArray());
+                neighborDictionary.Add(grid[x, y], neighbors);
+                grid[x, y].neighbors = neighbors;
             }
         }
+
     }
 
-    public void ResetTiles()
+
+    public Vector2Int WorldToGridPosition(Vector3 world_position)
     {
-        foreach (Tile t in grid)
+        int x = world_position.x < 0 ? Mathf.CeilToInt(world_position.x) : Mathf.FloorToInt(world_position.x);
+        int y = world_position.z < 0 ? Mathf.CeilToInt(world_position.z) : Mathf.FloorToInt(world_position.z);
+        return new Vector2Int(x, y);
+    }
+
+    public void ResetAllTiles()
+    {
+        if(grid != null)
         {
-            t._Color = Color.white;
-            t._Text = "";
+            foreach (Tile t in grid)
+            {
+                t.predecessor = null;
+                t.Cost = Mathf.Infinity;
+                t._Color = Color.white;
+                t._Text = "";
+            }
         }
+
     }
 }

@@ -7,8 +7,10 @@ using UnityEngine.UI;
 public class Tile : MonoBehaviour
 {
     public GameObject _wallGO;
+    public List<Tile> neighbors;
 
-    public Tile predecessor = null;
+    [HideInInspector] public Tile predecessor = null;
+
 
     public enum TileType
     {
@@ -17,6 +19,7 @@ public class Tile : MonoBehaviour
     }
 
     private TMP_Text _text;
+    [SerializeField]
     private TileType _tileType;
 
 
@@ -28,15 +31,12 @@ public class Tile : MonoBehaviour
     public Color _Color { get => _renderer.material.color; set => _renderer.material.color = value; }
     public string _Text { get => _text.text; set => _text.text = value; }
 
-    void Awake()
+    public void Init(int x, int y, int type)
     {
         _text = GetComponentInChildren<TextMeshProUGUI>();
         _renderer = GetComponent<Renderer>();
-        
-    }
+        neighbors = new List<Tile>();
 
-    public void Init(int x, int y, int type)
-    {
         _x = x;
         _y = y;
         _TileType = (TileType)type;
@@ -44,6 +44,8 @@ public class Tile : MonoBehaviour
         _text.text = "Tile_" + x + "_" + y;
     }
 
+    
+    [SerializeField]
     public TileType _TileType
     {
         get => _tileType;
@@ -87,6 +89,7 @@ public class Tile : MonoBehaviour
             _cost = value;
         }
     }
+
 
     public int _X => _x;
     public int _Y => _y;

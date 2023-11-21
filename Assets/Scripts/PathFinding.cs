@@ -7,7 +7,6 @@ using UnityEngine;
 
 public class Pathfinding : MonoBehaviour
 {
-    public TileMap tilemap;
 
     public void Djikistra(Tile depart_tile, Tile goal_tile)
     {
@@ -29,7 +28,7 @@ public class Pathfinding : MonoBehaviour
             if (current_tile == goal_tile) 
                 break; // break if goal is reached
 
-            foreach (Tile neighbor in tilemap.Neighbors(current_tile))
+            foreach (Tile neighbor in current_tile.neighbors)
             {
                 if(!closed_list.Contains(neighbor) && neighbor._TileType != Tile.TileType.Wall)
                 {
@@ -79,7 +78,7 @@ public class Pathfinding : MonoBehaviour
             if (current_tile == goal_tile)
                 break; // break if goal is reached
 
-            foreach (Tile neighbor in tilemap.Neighbors(current_tile))
+            foreach (Tile neighbor in current_tile.neighbors)
             {
                 if (!closed_list.Contains(neighbor) && neighbor._TileType != Tile.TileType.Wall)
                 {
@@ -115,17 +114,5 @@ public class Pathfinding : MonoBehaviour
         return Mathf.Abs(tile._X - goal_tile._X) + Mathf.Abs(tile._Y - goal_tile._Y);
     }
 
-
-    public void ResetAllTiles()
-    {
-        foreach(Tile tile in tilemap.grid)
-        {
-            tile.Cost = Mathf.Infinity;
-            tile.predecessor = null;
-            tile._Color = Color.white;
-            tile._Text = "";
-        }
-
-    }
 
 }
