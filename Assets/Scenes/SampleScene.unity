@@ -340,37 +340,6 @@ Transform:
   m_Children: []
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 90, y: 0, z: 0}
---- !u!1 &1068175123
-GameObject:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  serializedVersion: 6
-  m_Component:
-  - component: {fileID: 1068175124}
-  m_Layer: 0
-  m_Name: World Grid
-  m_TagString: Untagged
-  m_Icon: {fileID: 0}
-  m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
-  m_IsActive: 1
---- !u!4 &1068175124
-Transform:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1068175123}
-  serializedVersion: 2
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 1, y: 1, z: 1}
-  m_ConstrainProportionsScale: 0
-  m_Children: []
-  m_Father: {fileID: 0}
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &1952169996
 GameObject:
   m_ObjectHideFlags: 0
@@ -404,6 +373,9 @@ MonoBehaviour:
   tilePrefab: {fileID: 6263188039501216898, guid: ad342ac54761d0740b3d1c9e631ccb82, type: 3}
   sizeX: 2
   sizeY: 2
+  roomTypes:
+  - {fileID: 7679974364933548862, guid: 2307f5dafbf4c9d47b051f4b48d5b85a, type: 3}
+  - {fileID: 8359862391420180985, guid: e483df6cd42e5b946bfc35b8d389c3af, type: 3}
 --- !u!4 &1952169998
 Transform:
   m_ObjectHideFlags: 0
@@ -502,4 +474,3 @@ SceneRoots:
   - {fileID: 1952169998}
   - {fileID: 836475318}
   - {fileID: 2005961287}
-  - {fileID: 1068175124}

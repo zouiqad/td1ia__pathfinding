@@ -8,10 +8,10 @@ public class GameManager : MonoBehaviour
     [HideInInspector] public int sizeX;
     [HideInInspector] public int sizeY;
 
-    private GameObject _worldGridGO;
-
     public TileMap[,] worldGrid;
-
+    public GameObject[] roomTypes;
+    
+    private GameObject _worldGridGO;
     private GameObject player;
     private GameObject ia_agent;
     private Pathfinding pathfinding;
@@ -66,23 +66,28 @@ public class GameManager : MonoBehaviour
         if (_worldGridGO == null)
             CreateWorldGrid();
 
+
         for(int i = 0; i < sizeX; i++)
         {
             for(int j = 0; j < sizeY; j++)
             {
-                TileMap newTileMap = new GameObject().AddComponent<TileMap>();
+                /*                TileMap newTileMap = new GameObject().AddComponent<TileMap>();
 
+                                worldGrid[i, j] = newTileMap;
+                                newTileMap.GenerateChunk(tilePrefab);*/
+
+                Vector3 chunkPos = new Vector3(10 * i, 0.0f, 10 * j);
+
+                TileMap newTileMap = Instantiate(roomTypes[Random.Range(0, 2)], chunkPos, Quaternion.identity).GetComponent<TileMap>();
                 worldGrid[i, j] = newTileMap;
-                newTileMap.GenerateChunk(tilePrefab);
-
                 // Misc
-                Vector3 chunkPos = new Vector3(newTileMap.sizeX * i, 0.0f, newTileMap.sizeY * j);
+
                 newTileMap.gameObject.name = $"Grid[{i},{j}]";
                 newTileMap.transform.parent = _worldGridGO.transform;
                 newTileMap.transform.position = chunkPos;
 
 
-                Debug.Log($"{worldGrid[i, j].name} position {newTileMap.grid[0, 0].transform.localPosition}");
+                Debug.Log($"{worldGrid[i, j].name} position ");
             }
         }
 
@@ -158,7 +163,7 @@ public class GameManager : MonoBehaviour
     private void CreateWorldGrid()
     {
         worldGrid = new TileMap[sizeX, sizeY];
-        print("wassss" + worldGrid);
+        print("wassss" + worldGrid.Length);
         _worldGridGO = new GameObject();
         _worldGridGO.name = "World Grid";
     }

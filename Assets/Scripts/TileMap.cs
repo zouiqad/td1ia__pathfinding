@@ -20,12 +20,16 @@ public class TileMap : MonoBehaviour
         return neighborDictionary[tile];
     }
 
-    public void GenerateChunk(GameObject _tilePrefab)
+    private void Awake()
     {
         gameManager = GameObject.Find("GameManager").GetComponent<GameManager>();
         worldGrid = gameManager.worldGrid;
-
+        print("awoken " + name);
         grid = new Tile[sizeX, sizeY];
+    }
+    public void GenerateChunk(GameObject _tilePrefab)
+    {
+
         neighborDictionary = new Dictionary<Tile, List<Tile>>();
 
         // Generer la map (gameobjects)
