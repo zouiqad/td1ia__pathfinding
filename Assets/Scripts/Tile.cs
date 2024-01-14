@@ -93,5 +93,11 @@ public class Tile : MonoBehaviour
 
     public int _X => _x;
     public int _Y => _y;
+
+
+    public void DisableText()
+    {
+        _text.canvas.enabled = false;
+    }
 }
 

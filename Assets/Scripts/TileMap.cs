@@ -4,15 +4,12 @@ using UnityEngine;
 
 public class TileMap : MonoBehaviour
 {
-    private GameManager gameManager;
+    [SerializeField] private GameObject _tilePrefab;
 
-
-    private TileMap[,] worldGrid;
-    public int sizeX = 10;
-    public int sizeY = 10;
+    [HideInInspector] public int sizeX = 10;
+    [HideInInspector] public int sizeY = 10;
 
     public Tile[,] grid;
-
     public Dictionary<Tile, List<Tile>> neighborDictionary;
 
     public List<Tile> Neighbors(Tile tile)
@@ -22,24 +19,17 @@ public class TileMap : MonoBehaviour
 
     private void Awake()
     {
-        gameManager = GameObject.Find("GameManager").GetComponent<GameManager>();
-        worldGrid = gameManager.worldGrid;
-        print("awoken " + name);
-        grid = new Tile[sizeX, sizeY];
-    }
-    public void GenerateChunk(GameObject _tilePrefab)
-    {
-
         neighborDictionary = new Dictionary<Tile, List<Tile>>();
 
-        // Generer la map (gameobjects)
+        grid = new Tile[sizeX, sizeY];
         for (int y = 0; y < sizeY; y++)
         {
             for (int x = 0; x < sizeX; x++)
             {
-                grid[x, y] = Instantiate(_tilePrefab, new Vector3(x, 0, y), Quaternion.identity).GetComponent<Tile>();
-                grid[x, y].gameObject.transform.parent = transform;
-                grid[x, y].Init(x, y, 0);
+                Tile tile = transform.GetChild(x + y * sizeY).GetComponent<Tile>();
+                grid[x, y] = tile;
+                //grid[x, y].gameObject.transform.parent = transform;
+                grid[x, y].Init(x, y, (int)tile._TileType);
             }
         }
 
@@ -49,7 +39,7 @@ public class TileMap : MonoBehaviour
             for (int x = 0; x < sizeX; x++)
             {
                 List<Tile> neighbors = new List<Tile>();
-                
+
                 if (y < sizeY - 1)
                     neighbors.Add(grid[x, y + 1]);
                 if (x < sizeX - 1)
@@ -64,6 +54,22 @@ public class TileMap : MonoBehaviour
             }
         }
 
+
+    }
+    public void GenerateChunk(int sizeX, int sizeY)
+    {
+
+        neighborDictionary = new Dictionary<Tile, List<Tile>>();
+
+        // Generer la map (gameobjects)
+        for (int y = 0; y < sizeY; y++)
+        {
+            for (int x = 0; x < sizeX; x++)
+            {
+                Tile tile = Instantiate(_tilePrefab, new Vector3(x, 0, y), Quaternion.identity).GetComponent<Tile>();
+                tile.gameObject.transform.parent = transform;
+            }
+        }
     }
 
 

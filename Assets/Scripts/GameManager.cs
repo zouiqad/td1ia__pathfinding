@@ -4,13 +4,14 @@ using UnityEngine;
 
 public class GameManager : MonoBehaviour
 {
-    [HideInInspector] public GameObject tilePrefab;
+    public GameObject tilePrefab;
     [HideInInspector] public int sizeX;
     [HideInInspector] public int sizeY;
 
     public TileMap[,] worldGrid;
     public GameObject[] roomTypes;
-    
+    public GameObject ceilingPrefab;
+
     private GameObject _worldGridGO;
     private GameObject player;
     private GameObject ia_agent;
@@ -21,7 +22,13 @@ public class GameManager : MonoBehaviour
     void Start()
     {
         pathfinding = gameObject.GetComponent<Pathfinding>();
-        print(pathfinding);
+        player = GameObject.Find("Player");
+        ia_agent = GameObject.Find("IA_Agent");
+
+        GenerateTileMap(sizeX, sizeY, tilePrefab);
+        //disableDebugText();
+        SpawnPlayer();
+        SpawnIA();
     }
 
     // Update is called once per frame
@@ -54,11 +61,26 @@ public class GameManager : MonoBehaviour
 
         
     }
+    
+    private void disableDebugText()
+    {
+        foreach(var tilemap in worldGrid)
+        {
+            for (int i = 0; i < sizeX; i++)
+            {
+                for (int j = 0; j < sizeY; j++)
+                {
+                    tilemap.grid[i, j].DisableText();
+                }
+            }
+        }
+
+    }
     public void startDjikistra()
     {
         print(worldGrid[0, 0]);
         print(worldGrid[0, 0].grid[0, 0]);
-        pathfinding.Djikistra(worldGrid[0, 0].grid[0, 0], worldGrid[1, 1].grid[5, 5]);
+        pathfinding.Djikistra(worldGrid[0, 0].grid[1, 1], worldGrid[1, 1].grid[5, 5]);
     }
 
     public void GenerateTileMap(int sizeX, int sizeY, GameObject tilePrefab)
@@ -78,7 +100,9 @@ public class GameManager : MonoBehaviour
 
                 Vector3 chunkPos = new Vector3(10 * i, 0.0f, 10 * j);
 
-                TileMap newTileMap = Instantiate(roomTypes[Random.Range(0, 2)], chunkPos, Quaternion.identity).GetComponent<TileMap>();
+                GameObject roomType = (i == sizeX - 1 && j == sizeY - 1) ? roomTypes[0] : roomTypes[Random.Range(0, roomTypes.Length)];
+                
+                TileMap newTileMap = Instantiate(roomType, chunkPos, Quaternion.identity).GetComponent<TileMap>();
                 worldGrid[i, j] = newTileMap;
                 // Misc
 
@@ -91,6 +115,7 @@ public class GameManager : MonoBehaviour
             }
         }
 
+        SpawnCeiling();
         // Connect neighboring tilemaps
 
         for (int i = 0; i < sizeX; i++)
@@ -99,7 +124,6 @@ public class GameManager : MonoBehaviour
             {
                 TileMap currentTileMap = worldGrid[i, j];
 
-                print($"current TileMap {currentTileMap.name} i : {i} , j : {j}");
 
                 // Add top neighboring tiles
 
@@ -163,15 +187,30 @@ public class GameManager : MonoBehaviour
     private void CreateWorldGrid()
     {
         worldGrid = new TileMap[sizeX, sizeY];
-        print("wassss" + worldGrid.Length);
         _worldGridGO = new GameObject();
         _worldGridGO.name = "World Grid";
     }
 
-
-    private void SpawnIA(Vector3Int startPos)
+    private void SpawnCeiling()
     {
-        ia_agent.transform.position = new Vector3(startPos.x, 1.0f, startPos.z);
+        for(int i = 0; i < worldGrid.GetLength(0); i++)
+        {
+            for(int j = 0; j < worldGrid.GetLength(1); j++)
+            {
+                Vector3 parentPos = worldGrid[i, j].grid[5, 5].transform.position;
+                Instantiate(ceilingPrefab, new Vector3(parentPos.x - 0.5f, 4.28f, parentPos.z - 0.5f), Quaternion.Euler(new Vector3(0.0f, 0.0f, 180.0f))) ;
+            }
+        }
+    }
+    private void SpawnIA()
+    {
+        ia_agent.transform.position = worldGrid[sizeX - 1, sizeY - 1].grid[0, 0].transform.position;
+    }
+
+    private void SpawnPlayer()
+    {
+        player.transform.position = worldGrid[0, 0].grid[1, 1].transform.position;
+
     }
 
 /*    private void SpawnPlayer()

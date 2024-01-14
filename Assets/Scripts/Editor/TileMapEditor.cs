@@ -7,17 +7,27 @@ using UnityEditor;
 public class TileMapEditor : Editor
 {
 
-/*    public override void OnInspectorGUI()
+    public override void OnInspectorGUI()
     {
         base.OnInspectorGUI();
 
         TileMap tilemap = (TileMap)target;
 
-        if(GUILayout.Button("Generate TileMap"))
+        serializedObject.Update();
+
+        SerializedProperty sizeX = serializedObject.FindProperty("sizeX");
+        sizeX.intValue = EditorGUILayout.IntField("TileMap size X", sizeX.intValue);
+
+        SerializedProperty sizeY = serializedObject.FindProperty("sizeY");
+        sizeY.intValue = EditorGUILayout.IntField("TileMap size Y", sizeY.intValue);
+
+        serializedObject.ApplyModifiedProperties();
+
+        if (GUILayout.Button("Generate TileMap"))
         {
             tilemap.ResetAllTiles();
-            tilemap.GenerateMap(20, 20);
+            tilemap.GenerateChunk(sizeX.intValue, sizeY.intValue);
 
         }
-    }*/
+    }
 }

@@ -23,6 +23,7 @@ public class FPSController : MonoBehaviour
 
 
     CharacterController characterController;
+
     void Start()
     {
         characterController = GetComponent<CharacterController>();
@@ -30,12 +31,11 @@ public class FPSController : MonoBehaviour
         Cursor.visible = false;
     }
 
+
     private void OnTriggerEnter(Collider other)
     {
         print(other.name);
-
     }
-
     void Update()
     {
 
@@ -52,7 +52,7 @@ public class FPSController : MonoBehaviour
 
         #endregion
 
-        #region Handles Camera Switch
+/*        #region Handles Camera Switch
         if (Input.GetButton("Jump") && canMove && characterController.isGrounded)
         {
             moveDirection.y = jumpPower;
@@ -67,7 +67,7 @@ public class FPSController : MonoBehaviour
             moveDirection.y -= gravity * Time.deltaTime;
         }
 
-        #endregion
+        #endregion*/
 
         #region Handles Rotation
         characterController.Move(moveDirection * Time.deltaTime);

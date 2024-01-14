@@ -8,8 +8,10 @@ using UnityEngine;
 public class Pathfinding : MonoBehaviour
 {
 
-    public void Djikistra(Tile depart_tile, Tile goal_tile)
+    public List<Tile> Djikistra(Tile depart_tile, Tile goal_tile)
     {
+        List<Tile> path = new List<Tile>();
+
         List<Tile> closed_list = new List<Tile>();
         List<Tile> open_list = new List<Tile>();
 
@@ -48,15 +50,18 @@ public class Pathfinding : MonoBehaviour
             closed_list.Add(current_tile);
         }
 
-        goal_tile._Color = Color.green;
+
         Tile current = goal_tile.predecessor;
+        path.Add(current);
 
         while(current.predecessor != null)
         {
-            current._Color = Color.red;
             current = current.predecessor;
+            path.Add(current);
         }
 
+
+        return path;
     }
 
     public void AStar(Tile depart_tile, Tile goal_tile)
@@ -85,7 +90,7 @@ public class Pathfinding : MonoBehaviour
                     float gScore = neighbor.CostToReach + current_tile.Cost;
                     if (neighbor.Cost > gScore)
                     {
-                        neighbor.Cost = gScore + ComputeHeuristic(neighbor, goal_tile);
+                        neighbor.Cost = gScore + ManhattanDistance(neighbor, goal_tile);
                         neighbor._Color = Color.magenta;
                         neighbor.predecessor = current_tile;
                     }
@@ -109,7 +114,7 @@ public class Pathfinding : MonoBehaviour
 
     }
 
-    private float ComputeHeuristic(Tile tile, Tile goal_tile)
+    private float ManhattanDistance(Tile tile, Tile goal_tile)
     {
         return Mathf.Abs(tile._X - goal_tile._X) + Mathf.Abs(tile._Y - goal_tile._Y);
     }
